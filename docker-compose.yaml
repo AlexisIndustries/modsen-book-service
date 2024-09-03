@@ -1,0 +1,139 @@
+services:
+  postgresql:
+    container_name: library-database
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: library_service
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.utf8"
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: library-database-pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - default
+    restart: unless-stopped
+
+  library-apigateway-server:
+    container_name: library-apigateway-server
+    build:
+      context: library-apigateway-server
+      dockerfile: /Dockerfile
+    environment:
+      CONFIG_SERVER_HOSTNAME: library-config-server
+      DISCOVERY_SERVER_HOSTNAME: library-discovery-server
+    ports:
+      - "8080:8080"
+    networks:
+      - default
+    depends_on:
+      - library-config-server
+    restart: unless-stopped
+
+  library-config-server:
+    container_name: library-config-server
+    build:
+      context: library-config-server
+      dockerfile: /Dockerfile
+    environment:
+      DISCOVERY_SERVER_HOSTNAME: library-discovery-server
+    ports:
+      - "8888:8888"
+    networks:
+      - default
+    restart: unless-stopped
+
+  library-discovery-server:
+    container_name: library-discovery-server
+    build:
+      context: library-discovery-server
+      dockerfile: /Dockerfile
+    environment:
+      CONFIG_SERVER_HOSTNAME: library-config-server
+    ports:
+      - "8761:8761"
+    networks:
+      - default
+    restart: unless-stopped
+
+  library-auth-service:
+    container_name: library-auth-service
+    build:
+      context: library-auth-service
+      dockerfile: /Dockerfile
+    environment:
+      CONFIG_SERVER_HOSTNAME: library-config-server
+      DISCOVERY_SERVER_HOSTNAME: library-discovery-server
+    ports:
+      - "8532:8532"
+    networks:
+      - default
+    depends_on:
+      - library-config-server
+      - library-apigateway-server
+      - library-discovery-server
+    restart: unless-stopped
+
+  library-main-service:
+    container_name: library-main-service
+    build:
+      context: library-main-service
+      dockerfile: /Dockerfile
+    environment:
+      CONFIG_SERVER_HOSTNAME: library-config-server
+      DISCOVERY_SERVER_HOSTNAME: library-discovery-server
+      AUTH_SERVER_HOSTNAME: library-auth-service
+    ports:
+      - "8991:8991"
+    networks:
+      - default
+    depends_on:
+      - library-config-server
+      - library-apigateway-server
+      - library-discovery-server
+      - library-auth-service
+    restart: unless-stopped
+
+  library-reservation-service:
+    container_name: library-reservation-service
+    build:
+      context: library-reservation-service
+      dockerfile: /Dockerfile
+    environment:
+      CONFIG_SERVER_HOSTNAME: library-config-server
+      DISCOVERY_SERVER_HOSTNAME: library-discovery-server
+      AUTH_SERVER_HOSTNAME: library-auth-service
+    ports:
+      - "8501:8501"
+    networks:
+      - default
+    depends_on:
+      - library-config-server
+      - library-apigateway-server
+      - library-discovery-server
+      - library-auth-service
+    restart: unless-stopped
+
+networks:
+  default:
+
+volumes:
+  postgres:
+  pgadmin:

@@ -1,0 +1,48 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,gateway
+  endpoint:
+    gateway:
+      enabled: 'true'
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: 'true'
+
+  config:
+    import: optional:configserver:http://${CONFIG_SERVER_HOSTNAME:localhost}:8888
+    application:
+      name: library-apigateway-server
+
+springdoc:
+  enable-native-support: 'true'
+  swagger-ui:
+    config-url: /v3/api-docs/swagger-config
+    enabled: 'true'
+    path: /swagger-ui.html
+    urls:
+      - url: /v3/api-docs
+        name: API Gateway Service
+        display-name: API Gateway Service
+      - url: http://localhost:8532/v3/api-docs
+        name: Auth Service
+        display-name: Auth Service
+      - url: http://localhost:8991/v3/api-docs
+        name: Main Service
+        display-name: Main Service
+      - url: http://localhost:8501/v3/api-docs
+        name: Reservation Service
+        display-name: Reservation Service
+  api-docs:
+    enabled: 'true'
+server:
+  port: '8080'
+  forward-headers-strategy: framework
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${DISCOVERY_SERVER_HOSTNAME:localhost}:8761/eureka

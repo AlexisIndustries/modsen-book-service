@@ -1,3 +1,8 @@
 rootProject.name = 'modsen-library-service'
 
-include 'library-main-service'
+include ':library-main-service'
+include ':library-config-server'
+include ':library-discovery-server'
+include ':library-apigateway-server'
+include ':library-auth-service'
+include ':library-reservation-service'
