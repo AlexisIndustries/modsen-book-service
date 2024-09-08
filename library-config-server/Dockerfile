@@ -6,6 +6,8 @@ RUN gradle clean bootJar
 
 FROM amazoncorretto:21-alpine3.20
 
+RUN apk --no-cache add bash curl
+
 EXPOSE 8888
 
 RUN mkdir /app

@@ -6,12 +6,14 @@ import com.alexisindustries.library.repository.BookGenreRepository;
 import com.alexisindustries.library.service.BookGenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookGenreServiceImpl implements BookGenreService {
     private final BookGenreRepository bookGenreRepository;
 

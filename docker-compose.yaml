@@ -44,7 +44,8 @@ services:
     networks:
       - default
     depends_on:
-      - library-config-server
+      library-config-server:
+        condition: service_healthy
     restart: unless-stopped
 
   library-config-server:
@@ -58,6 +59,12 @@ services:
       - "8888:8888"
     networks:
       - default
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8888/actuator/health || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     restart: unless-stopped
 
   library-discovery-server:
@@ -86,9 +93,12 @@ services:
     networks:
       - default
     depends_on:
-      - library-config-server
-      - library-apigateway-server
-      - library-discovery-server
+      library-config-server:
+        condition: service_healthy
+      library-apigateway-server:
+        condition: service_started
+      library-discovery-server:
+        condition: service_started
     restart: unless-stopped
 
   library-main-service:
@@ -105,10 +115,14 @@ services:
     networks:
       - default
     depends_on:
-      - library-config-server
-      - library-apigateway-server
-      - library-discovery-server
-      - library-auth-service
+      library-config-server:
+        condition: service_healthy
+      library-apigateway-server:
+        condition: service_started
+      library-discovery-server:
+        condition: service_started
+      library-auth-service:
+        condition:  service_started
     restart: unless-stopped
 
   library-reservation-service:
@@ -125,10 +139,14 @@ services:
     networks:
       - default
     depends_on:
-      - library-config-server
-      - library-apigateway-server
-      - library-discovery-server
-      - library-auth-service
+      library-config-server:
+        condition: service_healthy
+      library-apigateway-server:
+        condition: service_started
+      library-discovery-server:
+        condition: service_started
+      library-auth-service:
+        condition: service_started
     restart: unless-stopped
 
 networks:

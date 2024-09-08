@@ -5,12 +5,14 @@ import com.alexisindustries.library.repository.BookRepository;
 import com.alexisindustries.library.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;

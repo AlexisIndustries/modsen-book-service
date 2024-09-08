@@ -10,12 +10,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 @AllArgsConstructor
 @Service
+@Transactional
 public class BookReservationServiceImpl implements BookReservationService {
     private final BookReservationRepository bookReservationRepository;
     private final RestTemplate restTemplate;

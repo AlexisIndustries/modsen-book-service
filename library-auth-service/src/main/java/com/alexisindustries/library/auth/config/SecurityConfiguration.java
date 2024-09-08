@@ -29,7 +29,7 @@ public class SecurityConfiguration {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:8080");
+                registry.addMapping("/**").allowedOrigins("http://localhost:8080", "http://localhost:8532");
             }
         };
     }
@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/auth/checkUser").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("v3/api-docs/**").permitAll())
                 .addFilterBefore(jwtRequestTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

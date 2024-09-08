@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/auth/checkUser").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("v3/api-docs/**").permitAll())
                 .addFilterBefore(jwtUserTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
