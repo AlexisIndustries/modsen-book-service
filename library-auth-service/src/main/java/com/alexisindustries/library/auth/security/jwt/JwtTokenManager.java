@@ -33,7 +33,6 @@ public class JwtTokenManager {
 
     public String createToken(String username, String password, Set<Role> roles) {
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("password", password);
         claims.put("roles", roles);
 
         Date now = new Date();
@@ -52,7 +51,6 @@ public class JwtTokenManager {
     public Authentication getAuthentication(String token) {
         User user = new User();
         user.setUsername(getUsernameFromJwt(token));
-        user.setPassword(getPasswordFromJwt(token));
         user.setRoles(getRolesFromJwt(token));
 
         return new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
@@ -80,17 +78,6 @@ public class JwtTokenManager {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-    }
-
-    public String getPasswordFromJwt(String token) {
-        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-        return (String) Jwts
-                .parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("password");
     }
 
     public String resolveToken(HttpServletRequest req) {
