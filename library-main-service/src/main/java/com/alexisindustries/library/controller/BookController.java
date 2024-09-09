@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/book")
+@RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
 
-    @GetMapping("all")
+    @GetMapping("")
     public List<Book> findAllBooks() {
         return bookService.findAll();
     }
@@ -33,7 +33,7 @@ public class BookController {
         return bookService.findBookByIsbn(isbn);
     }
 
-    @PostMapping("add")
+    @PostMapping("")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
         if (bookService.addBook(book)) {
             return ResponseEntity.ok(book);
@@ -41,7 +41,7 @@ public class BookController {
         return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         if (bookService.deleteBook(id)) {
             return ResponseEntity.ok().build();
@@ -49,7 +49,7 @@ public class BookController {
         return ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("update/{id}")
+    @PatchMapping("{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         if (bookService.updateBook(id, book)) {
             return ResponseEntity.ok(book);

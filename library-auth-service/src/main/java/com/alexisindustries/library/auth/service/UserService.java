@@ -1,5 +1,6 @@
 package com.alexisindustries.library.auth.service;
 
+import com.alexisindustries.library.auth.model.dto.LoginUserDto;
 import com.alexisindustries.library.auth.model.dto.RegisterUserDto;
 import com.alexisindustries.library.auth.model.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,4 +14,5 @@ public interface UserService extends UserDetailsService {
     List<UserDto> findAllUsers();
     UserDto findUserById(Long id) throws Exception;
     UserDto findUserByUsername(String username) throws Exception;
+    String loginUser(LoginUserDto loginUserDto) throws Exception;
 }

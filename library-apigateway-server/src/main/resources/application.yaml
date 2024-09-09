@@ -7,17 +7,18 @@ management:
     gateway:
       enabled: 'true'
 spring:
+  application:
+    name:
+      "library-apigateway-server"
   cloud:
     gateway:
       discovery:
         locator:
           enabled: 'true'
-
   config:
     import: optional:configserver:http://${CONFIG_SERVER_HOSTNAME:localhost}:8888
     application:
       name: library-apigateway-server
-
 springdoc:
   enable-native-support: 'true'
   swagger-ui:

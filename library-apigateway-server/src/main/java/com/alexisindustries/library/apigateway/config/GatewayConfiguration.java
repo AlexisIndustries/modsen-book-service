@@ -19,11 +19,11 @@ public class GatewayConfiguration {
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("library-main-service", r -> r.path("/api/v1/book/**", "/api/v1/author/**", "/api/v1/bookgenre/**")
+                .route("library-main-service", r -> r.path("/api/v1/books/**", "/api/v1/authors/**", "/api/v1/bookgenres/**")
                         .uri("http://library-main-service:8991/"))
-                .route("library-auth-service", r -> r.path("/api/v1/auth/**", "/api/v1/user/**")
+                .route("library-auth-service", r -> r.path("/api/v1/auth/**", "/api/v1/users/**")
                         .uri("http://library-auth-service:8532/"))
-                .route("library-reservation-service", r -> r.path("/api/v1/book/reservation/**")
+                .route("library-reservation-service", r -> r.path("/api/v1/reservations/**")
                         .uri("http://library-reservation-service:8501/"))
                 .build();
     }

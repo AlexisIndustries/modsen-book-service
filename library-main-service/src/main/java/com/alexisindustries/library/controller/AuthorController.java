@@ -9,31 +9,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/author")
+@RequestMapping("/api/v1/authors")
 @RequiredArgsConstructor
 public class AuthorController {
     private final AuthorService authorService;
 
-    @GetMapping("all")
+    @GetMapping("")
     public List<Author> findAllBooks() {
         return authorService.findAll();
     }
 
     @GetMapping("{id}")
-    public Author findBookById(@PathVariable Long id) {
+    public Author findAuthorById(@PathVariable Long id) {
         return authorService.findAuthorById(id);
     }
 
-    @PostMapping("add")
-    public ResponseEntity<Author> addBook(@RequestBody Author author) {
+    @PostMapping("")
+    public ResponseEntity<Author> addAuthor(@RequestBody Author author) {
         if (authorService.addAuthor(author)) {
             return ResponseEntity.ok(author);
         }
         return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteAuthor(@PathVariable Long id) {
         if (authorService.deleteAuthor(id)) {
             return ResponseEntity.ok().build();
         }
@@ -41,7 +41,7 @@ public class AuthorController {
     }
 
     @PatchMapping("update/{id}")
-    public ResponseEntity<Author> updateBook(@PathVariable Long id, @RequestBody Author author) {
+    public ResponseEntity<Author> updateAuthor(@PathVariable Long id, @RequestBody Author author) {
         if (authorService.updateAuthor(id, author)) {
             return ResponseEntity.ok(author);
         }

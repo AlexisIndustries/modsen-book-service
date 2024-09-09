@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/book/reservation")
+@RequestMapping("/api/v1/reservations")
 public class BookReservationController {
     private final BookReservationService bookReservationService;
     private final RestTemplate restTemplate;
@@ -27,19 +27,19 @@ public class BookReservationController {
         this.host = host;
     }
 
-    @GetMapping
+    @GetMapping("")
     public List<BookReservation> getAllBookReservations() {
         return bookReservationService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<BookReservation> getBookReservationById(@PathVariable Long id) {
         Optional<BookReservation> bookReservation = bookReservationService.findById(id);
         return bookReservation.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("add")
+    @PostMapping("")
     public ResponseEntity<BookReservation> createBookReservation(@RequestBody BookReservation bookReservation) {
         ResponseEntity<Book> bookOptionalResponseEntity = restTemplate.getForEntity(host + "/api/v1/book/" + bookReservation.getBookId(), Book.class);
         if (bookOptionalResponseEntity.getStatusCode().is2xxSuccessful()) {
@@ -49,7 +49,7 @@ public class BookReservationController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PatchMapping("/update/{id}")
+    @PatchMapping("{id}")
     public ResponseEntity<BookReservation> updateBookReservation(@PathVariable Long id, @RequestBody BookReservation bookReservationDetails) {
         Optional<BookReservation> bookReservation = bookReservationService.findById(id);
         if (bookReservation.isPresent()) {
@@ -69,8 +69,8 @@ public class BookReservationController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteBookReservation(@PathVariable Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteBookReservation(@PathVariable Long id) {
         bookReservationService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

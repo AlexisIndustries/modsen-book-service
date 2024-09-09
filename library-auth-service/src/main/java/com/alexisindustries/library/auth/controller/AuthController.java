@@ -8,6 +8,8 @@ import com.alexisindustries.library.auth.model.dto.RegisterUserDto;
 import com.alexisindustries.library.auth.model.dto.UserDto;
 import com.alexisindustries.library.auth.security.jwt.JwtTokenManager;
 import com.alexisindustries.library.auth.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.core.SecurityContext;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,40 +26,22 @@ import java.util.Set;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication", description = "Endpoints for user authentication")
 public class AuthController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenManager jwtTokenManager;
 
+    @Operation(summary = "Register a new user", description = "Creates a new user in the system")
     @PostMapping("register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterUserDto registerUserDto) throws Exception {
-        UserDto createdUser = userService.saveUser(registerUserDto);
-        createdUser.setPassword("[protected]");
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterUserDto dto) throws Exception {
+        UserDto createdUser = userService.saveUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+    @Operation(summary = "Login a user", description = "Authenticates a user and returns a JWT token")
     @PostMapping("login")
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<String> loginUser(@RequestBody LoginUserDto dto) {
-        UserDetails user = userService.loadUserByUsername(dto.getUsername());
-
-        if (passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-            Set<Role> authorities = (Set<Role>) user.getAuthorities();
-            String token = jwtTokenManager.createToken(user.getUsername(), user.getPassword(), authorities);
-            return ResponseEntity.ok(token);
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
-    @PostMapping("checkUser")
-    public ResponseEntity<UserDto> checkUser() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return ResponseEntity.badRequest().build();
-        }
-        User user = (User) authentication.getPrincipal();
-        UserDto userDto = userService.findUserByUsername(user.getUsername());
-        userDto.setPassword("[protected]");
-        return ResponseEntity.ok(userDto);
+    public ResponseEntity<String> loginUser(@RequestBody LoginUserDto dto) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(dto));
     }
 }
