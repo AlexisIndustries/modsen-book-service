@@ -4,6 +4,7 @@ import com.alexisindustries.library.reservation.security.JwtUserTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,7 +25,7 @@ public class SecurityConfiguration {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:8080");
+                registry.addMapping("/**").allowedOrigins("http://localhost:8080", "http://localhost:8501");
             }
         };
     }
@@ -35,9 +36,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login").permitAll()
-                        .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/v1/auth/checkUser").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "**").permitAll()
+                        .requestMatchers("/api/v1/reservations/**").authenticated()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("v3/api-docs/**").permitAll())

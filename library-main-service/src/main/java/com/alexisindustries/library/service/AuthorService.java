@@ -1,13 +1,14 @@
 package com.alexisindustries.library.service;
 
 import com.alexisindustries.library.model.Author;
+import com.alexisindustries.library.model.dto.AuthorDto;
 
 import java.util.List;
 
 public interface AuthorService {
-    List<Author> findAll();
-    Author findAuthorById(Long id);
-    boolean addAuthor(Author author);
-    boolean deleteAuthor(Long id);
-    boolean updateAuthor(Long id, Author author);
+    List<AuthorDto> findAll();
+    AuthorDto findAuthorById(Long id);
+    AuthorDto addAuthor(AuthorDto author);
+    void deleteAuthor(Long id);
+    AuthorDto updateAuthor(Long id, AuthorDto author);
 }

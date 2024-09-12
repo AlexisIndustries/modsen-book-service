@@ -1,9 +1,14 @@
 package com.alexisindustries.library.controller;
 
-import com.alexisindustries.library.model.Book;
+import com.alexisindustries.library.model.dto.BookDto;
 import com.alexisindustries.library.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,49 +16,50 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
+@Tag(name = "Books", description = "API for managing books")
 public class BookController {
     private final BookService bookService;
 
+    @Operation(summary = "Get all books", description = "Returns a list of all books")
     @GetMapping("")
-    public List<Book> findAllBooks() {
-        return bookService.findAll();
+    public ResponseEntity<List<BookDto>> findAllBooks() {
+        return ResponseEntity.ok(bookService.findAll());
     }
 
+    @Operation(summary = "Find book by ID", description = "Returns a book by its ID")
     @GetMapping("{id}")
-    public ResponseEntity<Book> findBookById(@PathVariable Long id) {
-        Book book = bookService.findBookById(id);
-        if(book == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(book);
+    public ResponseEntity<BookDto> findBookById(@PathVariable Long id) {
+        return ResponseEntity.ok(bookService.findBookById(id));
     }
 
+    @Operation(summary = "Find book by ISBN", description = "Returns a book by its ISBN")
     @GetMapping("isbn/{isbn}")
-    public Book findBookByIsbn(@PathVariable String isbn) {
-        return bookService.findBookByIsbn(isbn);
+    public ResponseEntity<BookDto> findBookByIsbn(@PathVariable String isbn) {
+        return ResponseEntity.ok(bookService.findBookByIsbn(isbn));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Add a new book", description = "Adds a new book to the system")
     @PostMapping("")
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        if (bookService.addBook(book)) {
-            return ResponseEntity.ok(book);
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(bookDto));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete a book", description = "Deletes a book by its ID")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
-        if (bookService.deleteBook(id)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        bookService.deleteBook(id);
+        return ResponseEntity.noContent().build();
     }
 
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Update a book", description = "Updates the information of a book by its ID")
     @PatchMapping("{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
-        if (bookService.updateBook(id, book)) {
-            return ResponseEntity.ok(book);
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
+        return ResponseEntity.ok(bookService.updateBook(id, bookDto));
     }
 }

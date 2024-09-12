@@ -1,16 +1,17 @@
 package com.alexisindustries.library.reservation.service;
 
-import com.alexisindustries.library.reservation.model.Book;
-import com.alexisindustries.library.reservation.model.BookReservation;
+import com.alexisindustries.library.reservation.model.BookDto;
+import com.alexisindustries.library.reservation.model.dto.BookReservationDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BookReservationService {
-    List<BookReservation> findAll();
-    Optional<BookReservation> findById(Long id);
-    BookReservation save(BookReservation bookReservation);
+    List<BookReservationDto> findAll();
+    BookReservationDto findById(Long id);
+    BookReservationDto save(BookReservationDto bookReservationDto);
     void deleteById(Long id);
-    List<Book> getAllAvailableBooks();
+    List<BookDto> getAllAvailableBooks();
     boolean isBookAvailable(long bookId);
+
+    BookReservationDto update(Long id, BookReservationDto bookReservationDto);
 }

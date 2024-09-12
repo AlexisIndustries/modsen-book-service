@@ -1,13 +1,14 @@
 package com.alexisindustries.library.service;
 
 import com.alexisindustries.library.model.BookGenre;
+import com.alexisindustries.library.model.dto.BookGenreDto;
 
 import java.util.List;
 
 public interface BookGenreService {
-    List<BookGenre> findAll();
-    BookGenre findBookGenreById(Long id);
-    boolean addBookGenre(BookGenre author);
-    boolean deleteBookGenre(Long id);
-    boolean updateBookGenre(Long id, BookGenre author);
+    List<BookGenreDto> findAll();
+    BookGenreDto findBookGenreById(Long id);
+    BookGenreDto addBookGenre(BookGenreDto bookGenreDto);
+    void deleteBookGenre(Long id);
+    BookGenreDto updateBookGenre(Long id, BookGenreDto bookGenreDto);
 }

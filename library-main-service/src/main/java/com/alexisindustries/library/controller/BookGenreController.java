@@ -1,51 +1,59 @@
 package com.alexisindustries.library.controller;
 
-import com.alexisindustries.library.model.BookGenre;
+import com.alexisindustries.library.model.dto.BookGenreDto;
 import com.alexisindustries.library.service.BookGenreService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/bookgenres")
 @RequiredArgsConstructor
+@Tag(name = "Book Genres", description = "API for managing book genres")
 public class BookGenreController {
     private final BookGenreService bookGenreService;
 
+    @Operation(summary = "Get all book genres", description = "Returns a list of all book genres")
     @GetMapping("")
-    public List<BookGenre> findAllBooks() {
-        return bookGenreService.findAll();
+    public ResponseEntity<List<BookGenreDto>> findAllBooks() {
+        return ResponseEntity.ok(bookGenreService.findAll());
     }
 
+    @Operation(summary = "Find book genre by ID", description = "Returns a book genre by its ID")
     @GetMapping("{id}")
-    public BookGenre findBookById(@PathVariable Long id) {
-        return bookGenreService.findBookGenreById(id);
+    public ResponseEntity<BookGenreDto> findBookById(@PathVariable Long id) {
+        return ResponseEntity.ok(bookGenreService.findBookGenreById(id));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Add a new book genre", description = "Adds a new book genre to the system")
     @PostMapping("")
-    public ResponseEntity<BookGenre> addBook(@RequestBody BookGenre author) {
-        if (bookGenreService.addBookGenre(author)) {
-            return ResponseEntity.ok(author);
-        }
-        return ResponseEntity.badRequest().build();
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<BookGenreDto> addBook(@RequestBody BookGenreDto bookGenreDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookGenreService.addBookGenre(bookGenreDto));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete a book genre", description = "Deletes a book genre by its ID")
     @DeleteMapping("{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
-        if (bookGenreService.deleteBookGenre(id)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        bookGenreService.deleteBookGenre(id);
+        return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Update a book genre", description = "Updates the information of a book genre by its ID")
     @PatchMapping("{id}")
-    public ResponseEntity<BookGenre> updateBook(@PathVariable Long id, @RequestBody BookGenre bookGenre) {
-        if (bookGenreService.updateBookGenre(id, bookGenre)) {
-            return ResponseEntity.ok(bookGenre);
-        }
-        return ResponseEntity.badRequest().build();
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<BookGenreDto> updateBook(@PathVariable Long id, @RequestBody BookGenreDto bookGenreDto) {
+        return ResponseEntity.ok(bookGenreService.updateBookGenre(id, bookGenreDto));
     }
 }

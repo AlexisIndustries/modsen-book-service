@@ -1,14 +1,15 @@
 package com.alexisindustries.library.service;
 
 import com.alexisindustries.library.model.Book;
+import com.alexisindustries.library.model.dto.BookDto;
 
 import java.util.List;
 
 public interface BookService {
-    List<Book> findAll();
-    Book findBookById(Long id);
-    Book findBookByIsbn(String isbn);
-    boolean addBook(Book book);
-    boolean updateBook(Long id, Book book);
-    boolean deleteBook(Long id);
+    List<BookDto> findAll();
+    BookDto findBookById(Long id);
+    BookDto findBookByIsbn(String isbn);
+    BookDto addBook(BookDto bookDto);
+    BookDto updateBook(Long id, BookDto bookDto);
+    void deleteBook(Long id);
 }

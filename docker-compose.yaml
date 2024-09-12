@@ -54,6 +54,7 @@ services:
       context: library-config-server
       dockerfile: /Dockerfile
     environment:
+      MAIN_HOSTNAME: library-main-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server
       DB_HOSTNAME: postgresql
     ports:

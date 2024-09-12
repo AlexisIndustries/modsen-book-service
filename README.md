@@ -2,9 +2,9 @@
 
 This is a simple Library REST API microservice project built with Spring Boot and PostgresSQL as the database. There are 6 main microservices:
 
-- Library Main Service - service that contains main api for book CRUD operations
+- Library Main Service - service that contains main api for bookDto CRUD operations
 - Library Auth Service - service for authorization and authentication
-- Library Reservation Service - service for book reservation
+- Library Reservation Service - service for bookDto reservation
 - Library API Gateway Server - a gateway server which processes requests to microservices
 - Library Config Server - server that contains configs for microservices
 - Library Discovery Server - server that registers all existing services
@@ -38,7 +38,7 @@ In order to run this microservice project, Docker and Docker Compose must be ins
 ## Running the Application
 
 1. Clone this repository:
-   ```git clone https://github.com/AlexisIndustries/modsen-book-service```
+   ```git clone https://github.com/AlexisIndustries/modsen-bookDto-service```
 
 2. Install Docker on your machine
 3. Run:

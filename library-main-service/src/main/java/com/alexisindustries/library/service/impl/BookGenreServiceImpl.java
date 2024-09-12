@@ -1,9 +1,12 @@
 package com.alexisindustries.library.service.impl;
 
-import com.alexisindustries.library.model.Author;
+import com.alexisindustries.library.exception.EntityNotFoundException;
+import com.alexisindustries.library.mapper.AutoBookGenreClassMapper;
 import com.alexisindustries.library.model.BookGenre;
+import com.alexisindustries.library.model.dto.BookGenreDto;
 import com.alexisindustries.library.repository.BookGenreRepository;
 import com.alexisindustries.library.service.BookGenreService;
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,43 +21,48 @@ public class BookGenreServiceImpl implements BookGenreService {
     private final BookGenreRepository bookGenreRepository;
 
     @Override
-    public List<BookGenre> findAll() {
-        return bookGenreRepository.findAll();
+    public List<BookGenreDto> findAll() {
+        return bookGenreRepository.findAll().stream().map(AutoBookGenreClassMapper.MAPPER::mapToBookGenreDto).toList();
     }
 
     @Override
-    public BookGenre findBookGenreById(Long id) {
-        return bookGenreRepository.findById(id).orElse(null);
+    public BookGenreDto findBookGenreById(Long id) {
+        BookGenre bookGenre = bookGenreRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Book Genre with id=%s not found.", id)
+        );
+
+        return AutoBookGenreClassMapper.MAPPER.mapToBookGenreDto(bookGenre);
     }
 
     @Override
-    public boolean addBookGenre(BookGenre bookGenre) {
-        if (bookGenre.getId() == null) {
-            bookGenreRepository.save(bookGenre);
-            return true;
+    public BookGenreDto addBookGenre(BookGenreDto bookGenreDto) {
+        Optional<BookGenre> author = bookGenreRepository.findById(bookGenreDto.getId());
+
+        if (author.isPresent()) {
+            throw new EntityExistsException(String.format("Book Genre with id %s already exists", bookGenreDto.getId()));
         }
-        Optional<BookGenre> authorOptional = bookGenreRepository.findById(bookGenre.getId());
-        if (authorOptional.isPresent()) {
-            return false;
-        }
-        bookGenreRepository.save(bookGenre);
-        return true;
+
+        BookGenre authorToSave = AutoBookGenreClassMapper.MAPPER.mapToBookGenre(bookGenreDto);
+        BookGenre savedAuthor = bookGenreRepository.save(authorToSave);
+        return AutoBookGenreClassMapper.MAPPER.mapToBookGenreDto(savedAuthor);
     }
 
     @Override
-    public boolean deleteBookGenre(Long id) {
-        bookGenreRepository.deleteById(id);
-        return !bookGenreRepository.existsById(id);
+    public void deleteBookGenre(Long id) {
+        BookGenre bookGenre = bookGenreRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Book Genre with id=%s not found.", id)
+        );
+        bookGenreRepository.delete(bookGenre);
     }
 
     @Override
-    public boolean updateBookGenre(Long id, BookGenre bookGenre) {
-        Optional<BookGenre> authorToUpdate = bookGenreRepository.findById(id);
-        if (authorToUpdate.isPresent()) {
-            bookGenre.setId(id);
-            bookGenreRepository.save(bookGenre);
-            return true;
-        }
-        return false;
+    public BookGenreDto updateBookGenre(Long id, BookGenreDto bookGenreDto) {
+        BookGenre bookGenreToUpdate = bookGenreRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Book Genre with id=%s not found.", id)
+        );
+        bookGenreToUpdate.setName(bookGenreDto.getName());
+        bookGenreToUpdate.setId(bookGenreDto.getId());
+        bookGenreRepository.save(bookGenreToUpdate);
+        return AutoBookGenreClassMapper.MAPPER.mapToBookGenreDto(bookGenreToUpdate);
     }
 }

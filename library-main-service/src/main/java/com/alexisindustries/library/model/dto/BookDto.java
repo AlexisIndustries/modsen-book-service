@@ -1,0 +1,34 @@
+package com.alexisindustries.library.model.dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+@Schema(description = "DTO for Book")
+public class BookDto {
+
+    @Schema(description = "Unique identifier of the book", example = "1")
+    private Long id;
+
+    @Schema(description = "ISBN of the book", example = "978-3-16-148410-0")
+    private String isbn;
+
+    @Schema(description = "Title of the book", example = "Effective Java")
+    private String title;
+
+    @Schema(description = "Description of the book", example = "A comprehensive guide to best practices in Java programming.")
+    private String description;
+
+    @Schema(description = "Quantity of the book available", example = "10")
+    private Integer quantity;
+
+    @Schema(description = "Genres of the book")
+    private List<BookGenreDto> genres;
+
+    @Schema(description = "Authors of the book")
+    private List<AuthorDto> authors;
+}
