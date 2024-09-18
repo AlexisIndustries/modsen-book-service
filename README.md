@@ -38,7 +38,7 @@ In order to run this microservice project, Docker and Docker Compose must be ins
 ## Running the Application
 
 1. Clone this repository:
-   ```git clone https://github.com/AlexisIndustries/modsen-bookDto-service```
+   ```git clone https://github.com/AlexisIndustries/modsen-book-service```
 
 2. Install Docker on your machine
 3. Run:
