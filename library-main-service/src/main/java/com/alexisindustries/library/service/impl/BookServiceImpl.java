@@ -21,10 +21,11 @@ import java.util.Optional;
 @Transactional
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final AutoBookClassMapper autoBookClassMapper;
 
     @Override
     public List<BookDto> findAll() {
-        return bookRepository.findAll().stream().map(AutoBookClassMapper.MAPPER::mapToBookDto).toList();
+        return bookRepository.findAll().stream().map(autoBookClassMapper::mapToBookDto).toList();
     }
 
     @Override
@@ -33,7 +34,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(
                         () -> new EntityNotFoundException(String.format("Author with id %s not found", id))
                 );
-        return AutoBookClassMapper.MAPPER.mapToBookDto(book);
+        return autoBookClassMapper.mapToBookDto(book);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(
                         () -> new EntityNotFoundException(String.format("Author with isbn %s not found", isbn))
                 );
-        return AutoBookClassMapper.MAPPER.mapToBookDto(book);
+        return autoBookClassMapper.mapToBookDto(book);
     }
 
     @Override
@@ -52,9 +53,9 @@ public class BookServiceImpl implements BookService {
             throw new EntityExistsException(String.format("Book with id %s already exists", bookDto.getId()));
         }
 
-        Book bookToSave = AutoBookClassMapper.MAPPER.mapToBook(bookDto);
+        Book bookToSave = autoBookClassMapper.mapToBook(bookDto);
         Book savedBook = bookRepository.save(bookToSave);
-        return AutoBookClassMapper.MAPPER.mapToBookDto(savedBook);
+        return autoBookClassMapper.mapToBookDto(savedBook);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class BookServiceImpl implements BookService {
         book.setIsbn(bookDto.getIsbn());
         book.setTitle(bookDto.getTitle());
         book.setDescription(bookDto.getDescription());
-        return AutoBookClassMapper.MAPPER.mapToBookDto(bookRepository.save(book));
+        return autoBookClassMapper.mapToBookDto(bookRepository.save(book));
 
     }
 

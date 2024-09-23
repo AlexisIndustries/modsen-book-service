@@ -6,9 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface AutoBookReservationClassMapper{
-    AutoBookReservationClassMapper MAPPER = Mappers.getMapper(AutoBookReservationClassMapper.class);
-
+public interface AutoBookReservationClassMapper {
     BookReservationDto mapToBookReservationDto(BookReservation bookReservation);
     BookReservation mapToBookReservation(BookReservationDto bookReservationDto);
 }

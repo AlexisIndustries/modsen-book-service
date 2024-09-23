@@ -16,26 +16,11 @@ services:
       - default
     restart: unless-stopped
 
-  pgadmin:
-    container_name: library-database-pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    networks:
-      - default
-    restart: unless-stopped
-
   library-apigateway-server:
     container_name: library-apigateway-server
     build:
       context: library-apigateway-server
-      dockerfile: /Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       CONFIG_SERVER_HOSTNAME: library-config-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server
@@ -52,7 +37,7 @@ services:
     container_name: library-config-server
     build:
       context: library-config-server
-      dockerfile: /Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       MAIN_HOSTNAME: library-main-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server
@@ -73,7 +58,7 @@ services:
     container_name: library-discovery-server
     build:
       context: library-discovery-server
-      dockerfile: /Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       CONFIG_SERVER_HOSTNAME: library-config-server
     ports:
@@ -86,7 +71,7 @@ services:
     container_name: library-auth-service
     build:
       context: library-auth-service
-      dockerfile: /Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       CONFIG_SERVER_HOSTNAME: library-config-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server
@@ -107,7 +92,7 @@ services:
     container_name: library-main-service
     build:
       context: library-main-service
-      dockerfile: /Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       CONFIG_SERVER_HOSTNAME: library-config-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server
@@ -131,7 +116,7 @@ services:
     container_name: library-reservation-service
     build:
       context: library-reservation-service
-      dockerfile: /Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       CONFIG_SERVER_HOSTNAME: library-config-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server

@@ -30,6 +30,7 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AutoUserClassMapper autoUserClassMapper;
     private final JwtTokenManager jwtTokenManager;
 
     @Override
@@ -40,15 +41,15 @@ public class UserServiceImpl implements UserService {
             throw new EntityAlreadyExistsException("User %s already exists.", userDto.getUsername());
         }
 
-        UserDto userDtoToSave = AutoUserClassMapper.MAPPER.mapToUserDto(userDto);
+        UserDto userDtoToSave = autoUserClassMapper.mapToUserDto(userDto);
 
         userDtoToSave.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userDtoToSave.getRoles().add(Role.USER);
 
-        User user = AutoUserClassMapper.MAPPER.mapToUser(userDtoToSave);
+        User user = autoUserClassMapper.mapToUser(userDtoToSave);
         User savedUser = userRepository.save(user);
 
-        UserDto userDto1 = AutoUserClassMapper.MAPPER.mapToUserDto(savedUser);
+        UserDto userDto1 = autoUserClassMapper.mapToUserDto(savedUser);
         userDto1.setPassword(null);
 
         return userDto1;
@@ -78,13 +79,13 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDto.getEmail());
 
         User updatedUser = userRepository.save(user);
-        return AutoUserClassMapper.MAPPER.mapToUserDto(updatedUser);
+        return autoUserClassMapper.mapToUserDto(updatedUser);
     }
 
     @Override
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(AutoUserClassMapper.MAPPER::mapToUserDto).toList();
+        return users.stream().map(autoUserClassMapper::mapToUserDto).toList();
     }
 
     @Override
@@ -92,13 +93,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("User with id=%s not found.", id)
         );
-        return AutoUserClassMapper.MAPPER.mapToUserDto(user);
+        return autoUserClassMapper.mapToUserDto(user);
     }
 
     @Override
     public UserDto findUserByUsername(String username) throws Exception {
         return userRepository.findByUsername(username)
-                .map(AutoUserClassMapper.MAPPER::mapToUserDto)
+                .map(autoUserClassMapper::mapToUserDto)
                 .orElse(null);
     }
 

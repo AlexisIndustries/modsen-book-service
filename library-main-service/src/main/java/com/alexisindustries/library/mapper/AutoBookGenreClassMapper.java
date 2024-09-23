@@ -7,8 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface AutoBookGenreClassMapper {
-    AutoBookGenreClassMapper MAPPER = Mappers.getMapper(AutoBookGenreClassMapper.class);
-
     BookGenreDto mapToBookGenreDto(BookGenre bookGenre);
     BookGenre mapToBookGenre(BookGenreDto bookGenreDto);
 }

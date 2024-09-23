@@ -19,10 +19,11 @@ import java.util.Optional;
 @Transactional
 public class BookGenreServiceImpl implements BookGenreService {
     private final BookGenreRepository bookGenreRepository;
+    private final AutoBookGenreClassMapper autoBookGenreClassMapper;
 
     @Override
     public List<BookGenreDto> findAll() {
-        return bookGenreRepository.findAll().stream().map(AutoBookGenreClassMapper.MAPPER::mapToBookGenreDto).toList();
+        return bookGenreRepository.findAll().stream().map(autoBookGenreClassMapper::mapToBookGenreDto).toList();
     }
 
     @Override
@@ -31,7 +32,7 @@ public class BookGenreServiceImpl implements BookGenreService {
                 () -> new EntityNotFoundException("Book Genre with id=%s not found.", id)
         );
 
-        return AutoBookGenreClassMapper.MAPPER.mapToBookGenreDto(bookGenre);
+        return autoBookGenreClassMapper.mapToBookGenreDto(bookGenre);
     }
 
     @Override
@@ -42,9 +43,9 @@ public class BookGenreServiceImpl implements BookGenreService {
             throw new EntityExistsException(String.format("Book Genre with id %s already exists", bookGenreDto.getId()));
         }
 
-        BookGenre authorToSave = AutoBookGenreClassMapper.MAPPER.mapToBookGenre(bookGenreDto);
+        BookGenre authorToSave = autoBookGenreClassMapper.mapToBookGenre(bookGenreDto);
         BookGenre savedAuthor = bookGenreRepository.save(authorToSave);
-        return AutoBookGenreClassMapper.MAPPER.mapToBookGenreDto(savedAuthor);
+        return autoBookGenreClassMapper.mapToBookGenreDto(savedAuthor);
     }
 
     @Override
@@ -63,6 +64,6 @@ public class BookGenreServiceImpl implements BookGenreService {
         bookGenreToUpdate.setName(bookGenreDto.getName());
         bookGenreToUpdate.setId(bookGenreDto.getId());
         bookGenreRepository.save(bookGenreToUpdate);
-        return AutoBookGenreClassMapper.MAPPER.mapToBookGenreDto(bookGenreToUpdate);
+        return autoBookGenreClassMapper.mapToBookGenreDto(bookGenreToUpdate);
     }
 }

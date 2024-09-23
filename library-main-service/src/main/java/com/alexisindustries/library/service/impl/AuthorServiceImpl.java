@@ -19,18 +19,19 @@ import java.util.Optional;
 @Transactional
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
+    private final AutoAuthorClassMapper autoAuthorClassMapper;
 
     @Override
     public List<AuthorDto> findAll() {
         List<Author> authors = authorRepository.findAll();
-        return authors.stream().map(AutoAuthorClassMapper.MAPPER::mapToAuthorDto).toList();
+        return authors.stream().map(autoAuthorClassMapper::mapToAuthorDto).toList();
     }
 
     @Override
     public AuthorDto findAuthorById(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Author with id %s not found", id)));
-        return AutoAuthorClassMapper.MAPPER.mapToAuthorDto(author);
+        return autoAuthorClassMapper.mapToAuthorDto(author);
     }
 
     @Override
@@ -41,9 +42,9 @@ public class AuthorServiceImpl implements AuthorService {
             throw new EntityExistsException(String.format("Author with id %s already exists", authorDto.getId()));
         }
 
-        Author authorToSave = AutoAuthorClassMapper.MAPPER.mapToAuthor(authorDto);
+        Author authorToSave = autoAuthorClassMapper.mapToAuthor(authorDto);
         Author savedAuthor = authorRepository.save(authorToSave);
-        return AutoAuthorClassMapper.MAPPER.mapToAuthorDto(savedAuthor);
+        return autoAuthorClassMapper.mapToAuthorDto(savedAuthor);
     }
 
     @Override
@@ -60,6 +61,6 @@ public class AuthorServiceImpl implements AuthorService {
         author.setId(authorDto.getId());
         author.setName(authorDto.getName());
         authorRepository.save(author);
-        return AutoAuthorClassMapper.MAPPER.mapToAuthorDto(author);
+        return autoAuthorClassMapper.mapToAuthorDto(author);
     }
 }

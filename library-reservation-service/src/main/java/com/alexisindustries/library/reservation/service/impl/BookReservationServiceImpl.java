@@ -20,18 +20,20 @@ import java.util.*;
 @Transactional
 public class BookReservationServiceImpl implements BookReservationService {
     private final BookReservationRepository bookReservationRepository;
+    private final AutoBookReservationClassMapper autoBookReservationClassMapper;
     private final RestTemplate restTemplate;
     private final String host;
 
-    public BookReservationServiceImpl(BookReservationRepository bookReservationRepository, RestTemplate restTemplate, @Value("${spring.library.main.service.host}") String host) {
+    public BookReservationServiceImpl(BookReservationRepository bookReservationRepository, AutoBookReservationClassMapper mapper, RestTemplate restTemplate, @Value("${spring.library.main.service.host}") String host) {
         this.bookReservationRepository = bookReservationRepository;
+        this.autoBookReservationClassMapper = mapper;
         this.restTemplate = restTemplate;
         this.host = host;
     }
 
     @Override
     public List<BookReservationDto> findAll() {
-        return bookReservationRepository.findAll().stream().map(AutoBookReservationClassMapper.MAPPER::mapToBookReservationDto).toList();
+        return bookReservationRepository.findAll().stream().map(autoBookReservationClassMapper::mapToBookReservationDto).toList();
     }
 
     @Override
@@ -40,7 +42,7 @@ public class BookReservationServiceImpl implements BookReservationService {
                 .orElseThrow(
                         () -> new EntityNotFoundException(String.format("Book Reservation with id %s not found", id))
                 );
-        return AutoBookReservationClassMapper.MAPPER.mapToBookReservationDto(bookReservation);
+        return autoBookReservationClassMapper.mapToBookReservationDto(bookReservation);
     }
 
     @Override
@@ -51,9 +53,9 @@ public class BookReservationServiceImpl implements BookReservationService {
         }
         ResponseEntity<BookDto> bookOptionalResponseEntity = restTemplate.getForEntity(host + "/api/v1/books/" + bookReservationDto.getBookId(), BookDto.class);
         if (bookOptionalResponseEntity.getStatusCode().is2xxSuccessful()) {
-            BookReservation bookReservationToSave = AutoBookReservationClassMapper.MAPPER.mapToBookReservation(bookReservationDto);
+            BookReservation bookReservationToSave = autoBookReservationClassMapper.mapToBookReservation(bookReservationDto);
             BookReservation savedBookReservation = bookReservationRepository.save(bookReservationToSave);
-            return AutoBookReservationClassMapper.MAPPER.mapToBookReservationDto(savedBookReservation);
+            return autoBookReservationClassMapper.mapToBookReservationDto(savedBookReservation);
         }
         throw new EntityNotFoundException(String.format("Book with id %s not found", bookReservationDto.getBookId()));
     }
@@ -70,16 +72,16 @@ public class BookReservationServiceImpl implements BookReservationService {
     @Override
     public List<BookDto> getAllAvailableBooks() {
         ResponseEntity<BookDto[]> booksRequest = restTemplate.getForEntity("http://localhost:8080/api/v1/book/all", BookDto[].class);
-        BookDto[] bookDtos = Objects.requireNonNull(booksRequest.getBody());
-        List<BookDto> availableBookDtos = new ArrayList<>();
-        for (BookDto bookDto : bookDtos) {
-            long id = bookDto.getId();
+        BookDto[] bookDto = Objects.requireNonNull(booksRequest.getBody());
+        List<BookDto> availableBookDto = new ArrayList<>();
+        for (BookDto bookDto1 : bookDto) {
+            long id = bookDto1.getId();
             int count = bookReservationRepository.countBookReservationByBookId(id);
-            if (bookDto.getQuantity() > count) {
-                availableBookDtos.add(bookDto);
+            if (bookDto1.getQuantity() > count) {
+                availableBookDto.add(bookDto1);
             }
         }
-        return availableBookDtos;
+        return availableBookDto;
     }
 
     @Override
@@ -108,7 +110,7 @@ public class BookReservationServiceImpl implements BookReservationService {
             updatedBookReservation.setBorrowedTime(bookReservationDto.getBorrowedTime());
             updatedBookReservation.setReturnTime(bookReservationDto.getReturnTime());
             bookReservationRepository.save(updatedBookReservation);
-            return AutoBookReservationClassMapper.MAPPER.mapToBookReservationDto(updatedBookReservation);
+            return autoBookReservationClassMapper.mapToBookReservationDto(updatedBookReservation);
         } else {
             throw new EntityNotFoundException(String.format("Book Reservation with id %s not found", bookReservationDto.getId()));
         }

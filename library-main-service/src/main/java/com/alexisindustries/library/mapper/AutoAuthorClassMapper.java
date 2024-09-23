@@ -7,8 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface AutoAuthorClassMapper {
-    AutoAuthorClassMapper MAPPER = Mappers.getMapper(AutoAuthorClassMapper.class);
-
     AuthorDto mapToAuthorDto(Author author);
     Author mapToAuthor(AuthorDto authorDto);
 }

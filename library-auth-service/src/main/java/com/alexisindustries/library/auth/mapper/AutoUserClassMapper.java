@@ -9,8 +9,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface AutoUserClassMapper {
-    AutoUserClassMapper MAPPER = Mappers.getMapper(AutoUserClassMapper.class);
-
     UserDto mapToUserDto(User user);
     UserDto mapToUserDto(RegisterUserDto registerUserDto);
     User mapToUser(LoginUserDto loginUserDto);
