@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @Operation(summary = "Update user", description = "Updates a user's information")
-    @PatchMapping("{id}")
+    @PutMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,
                                               @PathVariable Long id) throws Exception {

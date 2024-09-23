@@ -47,7 +47,7 @@ public class BookReservationController {
     }
 
     @Operation(summary = "Update a book reservation", description = "Update an existing book reservation by its ID")
-    @PatchMapping("{id}")
+    @PutMapping("{id}")
     @RolesAllowed({"ADMIN", "USER"})
     public ResponseEntity<BookReservationDto> updateBookReservation(@PathVariable Long id, @RequestBody BookReservationDto bookReservationDetails) {
         return ResponseEntity.ok(bookReservationService.update(id, bookReservationDetails));

@@ -51,7 +51,7 @@ public class BookGenreController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update a book genre", description = "Updates the information of a book genre by its ID")
-    @PatchMapping("{id}")
+    @PutMapping("{id}")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<BookGenreDto> updateBook(@PathVariable Long id, @RequestBody BookGenreDto bookGenreDto) {
         return ResponseEntity.ok(bookGenreService.updateBookGenre(id, bookGenreDto));

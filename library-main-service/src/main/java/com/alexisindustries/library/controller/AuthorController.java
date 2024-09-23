@@ -53,7 +53,7 @@ public class AuthorController {
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update an author", description = "Updates the information of an author by their ID")
-    @PatchMapping("{id}")
+    @PutMapping("{id}")
     public ResponseEntity<AuthorDto> updateAuthor(@PathVariable Long id, @RequestBody AuthorDto author) {
         return ResponseEntity.ok(authorService.updateAuthor(id, author));
     }

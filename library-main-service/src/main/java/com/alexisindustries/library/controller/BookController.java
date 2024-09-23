@@ -58,7 +58,7 @@ public class BookController {
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update a book", description = "Updates the information of a book by its ID")
-    @PatchMapping("{id}")
+    @PutMapping("{id}")
     public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
         return ResponseEntity.ok(bookService.updateBook(id, bookDto));
     }
