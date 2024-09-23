@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Schema(description = "DTO for Book Reservation")
 public class BookReservationDto {
-    @Schema(description = "Unique identifier for the book reservation", example = "1")
+    @Schema(description = "Unique identifier for the book reservation", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private long id;
     @Schema(description = "Unique identifier for the book", example = "101")
     private long bookId;

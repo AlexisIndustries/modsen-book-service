@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Schema(description = "DTO for Author")
 public class AuthorDto {
-    @Schema(description = "Unique identifier of the author", example = "1")
+    @Schema(description = "Unique identifier of the author", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @Schema(description = "Name of the author", example = "John Doe")

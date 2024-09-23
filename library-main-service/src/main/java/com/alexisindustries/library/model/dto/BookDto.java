@@ -11,7 +11,7 @@ import java.util.List;
 @Schema(description = "DTO for Book")
 public class BookDto {
 
-    @Schema(description = "Unique identifier of the book", example = "1")
+    @Schema(description = "Unique identifier of the book", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @Schema(description = "ISBN of the book", example = "978-3-16-148410-0")

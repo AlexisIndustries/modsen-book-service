@@ -9,7 +9,7 @@ import lombok.Setter;
 @Schema(description = "DTO for Book Genre")
 public class BookGenreDto {
 
-    @Schema(description = "Unique identifier of the book genre", example = "1")
+    @Schema(description = "Unique identifier of the book genre", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @Schema(description = "Name of the book genre", example = "Science Fiction")
