@@ -39,10 +39,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public AuthorDto addAuthor(AuthorDto authorDto) {
-        Optional<Author> author = authorRepository.findById(authorDto.getId());
+        Optional<Author> author = authorRepository.findByName(authorDto.getName());
 
         if (author.isPresent()) {
-            throw new EntityExistsException(String.format("Author with id %s already exists", authorDto.getId()));
+            throw new EntityExistsException(String.format("Author with name %s already exists", authorDto.getId()));
         }
 
         Author authorToSave = autoAuthorClassMapper.mapToAuthor(authorDto);

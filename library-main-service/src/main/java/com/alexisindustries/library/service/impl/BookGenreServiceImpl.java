@@ -40,10 +40,10 @@ public class BookGenreServiceImpl implements BookGenreService {
     @Override
     @Transactional
     public BookGenreDto addBookGenre(BookGenreDto bookGenreDto) {
-        Optional<BookGenre> author = bookGenreRepository.findById(bookGenreDto.getId());
+        Optional<BookGenre> author = bookGenreRepository.findByName(bookGenreDto.getName());
 
         if (author.isPresent()) {
-            throw new EntityExistsException(String.format("Book Genre with id %s already exists", bookGenreDto.getId()));
+            throw new EntityExistsException(String.format("Book Genre with name %s already exists", bookGenreDto.getId()));
         }
 
         BookGenre authorToSave = autoBookGenreClassMapper.mapToBookGenre(bookGenreDto);

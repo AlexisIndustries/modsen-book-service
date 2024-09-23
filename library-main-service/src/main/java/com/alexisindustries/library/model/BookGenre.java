@@ -23,7 +23,7 @@ public class BookGenre implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "genres")
-    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JsonIgnore
     private List<Book> books;
 }

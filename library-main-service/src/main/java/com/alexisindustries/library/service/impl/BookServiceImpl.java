@@ -52,9 +52,9 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto addBook(BookDto bookDto) {
-        Optional<Book> book = bookRepository.findById(bookDto.getId());
+        Optional<Book> book = bookRepository.findByIsbn(bookDto.getIsbn());
         if (book.isPresent()) {
-            throw new EntityExistsException(String.format("Book with id %s already exists", bookDto.getId()));
+            throw new EntityExistsException(String.format("Book with isbn %s already exists", bookDto.getId()));
         }
 
         Book bookToSave = autoBookClassMapper.mapToBook(bookDto);

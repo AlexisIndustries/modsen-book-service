@@ -32,7 +32,6 @@ public class BookGenreController {
         return ResponseEntity.ok(bookGenreService.findBookGenreById(id));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Add a new book genre", description = "Adds a new book genre to the system")
     @PostMapping("")
     @SecurityRequirement(name = "bearerAuth")
@@ -40,7 +39,6 @@ public class BookGenreController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookGenreService.addBookGenre(bookGenreDto));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete a book genre", description = "Deletes a book genre by its ID")
     @DeleteMapping("{id}")
     @SecurityRequirement(name = "bearerAuth")
@@ -49,7 +47,6 @@ public class BookGenreController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update a book genre", description = "Updates the information of a book genre by its ID")
     @PutMapping("{id}")
     @SecurityRequirement(name = "bearerAuth")

@@ -23,7 +23,7 @@ public class Author implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "authors")
-    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JsonIgnore
     private List<Book> books;
 }

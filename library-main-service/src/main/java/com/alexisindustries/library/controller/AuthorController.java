@@ -34,7 +34,6 @@ public class AuthorController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Add a new author", description = "Adds a new author to the system")
     @PostMapping("")
     public ResponseEntity<AuthorDto> addAuthor(@RequestBody AuthorDto author) {
@@ -42,7 +41,6 @@ public class AuthorController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete an author", description = "Deletes an author by their ID")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteAuthor(@PathVariable Long id) {
@@ -51,7 +49,6 @@ public class AuthorController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update an author", description = "Updates the information of an author by their ID")
     @PutMapping("{id}")
     public ResponseEntity<AuthorDto> updateAuthor(@PathVariable Long id, @RequestBody AuthorDto author) {

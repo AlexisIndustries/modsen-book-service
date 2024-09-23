@@ -39,7 +39,6 @@ public class BookController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Add a new book", description = "Adds a new book to the system")
     @PostMapping("")
     public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
@@ -47,7 +46,6 @@ public class BookController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete a book", description = "Deletes a book by its ID")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
@@ -56,7 +54,6 @@ public class BookController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update a book", description = "Updates the information of a book by its ID")
     @PutMapping("{id}")
     public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
