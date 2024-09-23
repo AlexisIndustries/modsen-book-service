@@ -24,11 +24,13 @@ public class BookServiceImpl implements BookService {
     private final AutoBookClassMapper autoBookClassMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(autoBookClassMapper::mapToBookDto).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookDto findBookById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(
@@ -38,6 +40,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookDto findBookByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(isbn)
                 .orElseThrow(
@@ -47,6 +50,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookDto addBook(BookDto bookDto) {
         Optional<Book> book = bookRepository.findById(bookDto.getId());
         if (book.isPresent()) {
@@ -59,6 +63,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookDto updateBook(Long id, BookDto bookDto) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(
@@ -73,6 +78,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void deleteBook(Long id) {
         Book author = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Book with id %s not found", id)));

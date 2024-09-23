@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenManager jwtTokenManager;
 
     @Override
+    @Transactional
     public UserDto saveUser(RegisterUserDto userDto) throws Exception {
         Optional<User> optionalUser = userRepository.findByUsername(userDto.getUsername());
 
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public String loginUser(LoginUserDto userDto) throws Exception {
         User user = userRepository.findByUsername(userDto.getUsername())
                 .orElseThrow(() -> new EntityNotFoundException("User with username=%s not found.", userDto.getUsername()));
@@ -69,6 +71,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(UserDto userDto, Long id) throws Exception {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("User with username=%s not found.", userDto.getUsername()
@@ -83,12 +86,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(autoUserClassMapper::mapToUserDto).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findUserById(Long id) throws Exception {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("User with id=%s not found.", id)
@@ -97,6 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findUserByUsername(String username) throws Exception {
         return userRepository.findByUsername(username)
                 .map(autoUserClassMapper::mapToUserDto)
@@ -104,6 +110,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUserById(Long id) throws Exception {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("User with id=%s not found.", id)
@@ -113,6 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));

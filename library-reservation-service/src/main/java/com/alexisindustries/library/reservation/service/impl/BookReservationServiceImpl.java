@@ -32,11 +32,13 @@ public class BookReservationServiceImpl implements BookReservationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookReservationDto> findAll() {
         return bookReservationRepository.findAll().stream().map(autoBookReservationClassMapper::mapToBookReservationDto).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookReservationDto findById(Long id) {
         BookReservation bookReservation = bookReservationRepository.findById(id)
                 .orElseThrow(
@@ -46,6 +48,7 @@ public class BookReservationServiceImpl implements BookReservationService {
     }
 
     @Override
+    @Transactional
     public BookReservationDto save(BookReservationDto bookReservationDto) {
         Optional<BookReservation> bookReservation = bookReservationRepository.findById(bookReservationDto.getId());
         if (bookReservation.isPresent()) {
@@ -61,6 +64,7 @@ public class BookReservationServiceImpl implements BookReservationService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         BookReservation bookReservation = bookReservationRepository.findById(id)
                 .orElseThrow(
@@ -70,6 +74,7 @@ public class BookReservationServiceImpl implements BookReservationService {
     }
 
     @Override
+    @Transactional
     public List<BookDto> getAllAvailableBooks() {
         ResponseEntity<BookDto[]> booksRequest = restTemplate.getForEntity("http://localhost:8080/api/v1/book/all", BookDto[].class);
         BookDto[] bookDto = Objects.requireNonNull(booksRequest.getBody());
@@ -85,6 +90,7 @@ public class BookReservationServiceImpl implements BookReservationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isBookAvailable(long bookId) {
         ResponseEntity<BookDto> booksRequest = restTemplate.getForEntity("http://localhost:8080/api/v1/book/" + bookId, BookDto.class);
         if (booksRequest.getStatusCode().is4xxClientError()) {
@@ -97,6 +103,7 @@ public class BookReservationServiceImpl implements BookReservationService {
     }
 
     @Override
+    @Transactional
     public BookReservationDto update(Long id, BookReservationDto bookReservationDto) {
         Optional<BookReservation> bookReservation = bookReservationRepository.findById(id);
         if (bookReservation.isPresent()) {

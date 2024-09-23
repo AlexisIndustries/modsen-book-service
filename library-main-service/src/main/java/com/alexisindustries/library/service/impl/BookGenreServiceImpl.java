@@ -22,11 +22,13 @@ public class BookGenreServiceImpl implements BookGenreService {
     private final AutoBookGenreClassMapper autoBookGenreClassMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookGenreDto> findAll() {
         return bookGenreRepository.findAll().stream().map(autoBookGenreClassMapper::mapToBookGenreDto).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookGenreDto findBookGenreById(Long id) {
         BookGenre bookGenre = bookGenreRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Book Genre with id=%s not found.", id)
@@ -36,6 +38,7 @@ public class BookGenreServiceImpl implements BookGenreService {
     }
 
     @Override
+    @Transactional
     public BookGenreDto addBookGenre(BookGenreDto bookGenreDto) {
         Optional<BookGenre> author = bookGenreRepository.findById(bookGenreDto.getId());
 
@@ -49,6 +52,7 @@ public class BookGenreServiceImpl implements BookGenreService {
     }
 
     @Override
+    @Transactional
     public void deleteBookGenre(Long id) {
         BookGenre bookGenre = bookGenreRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Book Genre with id=%s not found.", id)
@@ -57,6 +61,7 @@ public class BookGenreServiceImpl implements BookGenreService {
     }
 
     @Override
+    @Transactional
     public BookGenreDto updateBookGenre(Long id, BookGenreDto bookGenreDto) {
         BookGenre bookGenreToUpdate = bookGenreRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Book Genre with id=%s not found.", id)

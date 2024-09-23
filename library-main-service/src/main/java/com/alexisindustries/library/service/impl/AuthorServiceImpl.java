@@ -22,12 +22,14 @@ public class AuthorServiceImpl implements AuthorService {
     private final AutoAuthorClassMapper autoAuthorClassMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<AuthorDto> findAll() {
         List<Author> authors = authorRepository.findAll();
         return authors.stream().map(autoAuthorClassMapper::mapToAuthorDto).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AuthorDto findAuthorById(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Author with id %s not found", id)));
@@ -35,6 +37,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorDto addAuthor(AuthorDto authorDto) {
         Optional<Author> author = authorRepository.findById(authorDto.getId());
 
@@ -48,6 +51,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public void deleteAuthor(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Author with id %s not found", id)));
@@ -55,6 +59,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorDto updateAuthor(Long id, AuthorDto authorDto) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Author with id %s not found", id)));
