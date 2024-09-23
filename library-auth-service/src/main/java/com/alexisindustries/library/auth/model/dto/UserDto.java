@@ -14,7 +14,7 @@ import java.util.Set;
 @Schema(description = "DTO for user details")
 public class UserDto {
 
-    @Schema(description = "ID of the user", example = "1")
+    @Schema(description = "ID of the user", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @Schema(description = "Username of the user", example = "john_doe")
