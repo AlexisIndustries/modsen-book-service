@@ -3,7 +3,7 @@ package com.alexisindustries.library.reservation.service.impl;
 import com.alexisindustries.library.reservation.exception.EntityAlreadyExistsException;
 import com.alexisindustries.library.reservation.exception.EntityNotFoundException;
 import com.alexisindustries.library.reservation.mapper.AutoBookReservationClassMapper;
-import com.alexisindustries.library.reservation.model.BookDto;
+import com.alexisindustries.library.reservation.model.dto.BookDto;
 import com.alexisindustries.library.reservation.model.BookReservation;
 import com.alexisindustries.library.reservation.model.dto.BookReservationDto;
 import com.alexisindustries.library.reservation.repository.BookReservationRepository;

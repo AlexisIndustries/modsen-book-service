@@ -1,17 +1,15 @@
 package com.alexisindustries.library.reservation.controller;
 
-import com.alexisindustries.library.reservation.model.BookDto;
+import com.alexisindustries.library.reservation.model.dto.BookDto;
 import com.alexisindustries.library.reservation.model.dto.BookReservationDto;
 import com.alexisindustries.library.reservation.service.BookReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.alexisindustries.library.reservation.service;
 
-import com.alexisindustries.library.reservation.model.BookDto;
+import com.alexisindustries.library.reservation.model.dto.BookDto;
 import com.alexisindustries.library.reservation.model.dto.BookReservationDto;
 
 import java.util.List;

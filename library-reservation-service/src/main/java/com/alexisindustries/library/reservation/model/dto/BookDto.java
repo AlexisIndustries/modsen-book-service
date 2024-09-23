@@ -1,4 +1,4 @@
-package com.alexisindustries.library.reservation.model;
+package com.alexisindustries.library.reservation.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
