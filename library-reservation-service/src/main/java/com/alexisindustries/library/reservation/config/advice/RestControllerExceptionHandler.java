@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<Object> handleOtherException(Throwable e) {
+    @ExceptionHandler({
+            NullPointerException.class,
+            IllegalStateException.class,
+            IllegalArgumentException.class,
+    })
+    public ResponseEntity<Object> handleOtherException(RuntimeException e) {
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ExceptionMessageResponse(e.getMessage(), "Internal server error"));
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ExceptionMessageResponse("An error occurred", "Bad Request"));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
