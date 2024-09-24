@@ -26,9 +26,6 @@ public class Book implements Serializable {
     @Column(length = 1000)
     private String description;
 
-    @Column
-    private Integer quantity;
-
     @ManyToMany
     @JoinTable(
             name = "book_genre",

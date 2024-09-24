@@ -14,8 +14,6 @@ public class BookReservationDto {
     private long id;
     @Schema(description = "Unique identifier for the book", example = "101")
     private long bookId;
-    @Schema(description = "Unique identifier for the user who reserved the book", example = "1001")
-    private Long userId;
     @Schema(description = "The time when the book was borrowed", example = "2024-09-12T10:15:30")
     private LocalDateTime borrowedTime;
     @Schema(description = "The time when the book is expected to be returned", example = "2024-09-19T10:15:30")

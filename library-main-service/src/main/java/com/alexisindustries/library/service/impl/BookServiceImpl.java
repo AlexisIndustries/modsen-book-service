@@ -7,22 +7,27 @@ import com.alexisindustries.library.mapper.AutoBookGenreClassMapper;
 import com.alexisindustries.library.model.Author;
 import com.alexisindustries.library.model.Book;
 import com.alexisindustries.library.model.BookGenre;
+import com.alexisindustries.library.model.User;
 import com.alexisindustries.library.model.dto.BookDto;
+import com.alexisindustries.library.model.dto.BookReservationAddDto;
 import com.alexisindustries.library.repository.AuthorRepository;
 import com.alexisindustries.library.repository.BookGenreRepository;
 import com.alexisindustries.library.repository.BookRepository;
 import com.alexisindustries.library.service.BookService;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
@@ -31,6 +36,19 @@ public class BookServiceImpl implements BookService {
     private final AutoBookClassMapper autoBookClassMapper;
     private final AutoBookGenreClassMapper autoBookGenreClassMapper;
     private final AutoAuthorClassMapper autoAuthorClassMapper;
+    private final RestTemplate restTemplate;
+    private final String host;
+
+    public BookServiceImpl(BookRepository bookRepository, BookGenreRepository bookGenreRepository, AuthorRepository authorRepository, AutoBookClassMapper autoBookClassMapper, AutoBookGenreClassMapper autoBookGenreClassMapper, AutoAuthorClassMapper autoAuthorClassMapper, RestTemplate restTemplate, @Value("${spring.library.main.service.host}") String host) {
+        this.bookRepository = bookRepository;
+        this.bookGenreRepository = bookGenreRepository;
+        this.authorRepository = authorRepository;
+        this.autoBookClassMapper = autoBookClassMapper;
+        this.autoBookGenreClassMapper = autoBookGenreClassMapper;
+        this.autoAuthorClassMapper = autoAuthorClassMapper;
+        this.restTemplate = restTemplate;
+        this.host = host;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -70,6 +88,13 @@ public class BookServiceImpl implements BookService {
 
         Book bookToSave = autoBookClassMapper.mapToBook(bookDto);
         Book savedBook = bookRepository.save(bookToSave);
+
+        BookReservationAddDto dto = BookReservationAddDto.builder()
+                .bookId(savedBook.getId())
+                .build();
+
+        restTemplate.postForObject(host + "/api/v1/reservations", dto, BookReservationAddDto.class);
+
         return autoBookClassMapper.mapToBookDto(savedBook);
     }
 
@@ -92,7 +117,6 @@ public class BookServiceImpl implements BookService {
         book.setIsbn(bookDto.getIsbn());
         book.setTitle(bookDto.getTitle());
         book.setDescription(bookDto.getDescription());
-        book.setQuantity(bookDto.getQuantity());
         List<Author> authors = bookDto.getAuthors().stream()
                 .map(authorDto -> authorRepository.findByName(authorDto.getName())
                         .orElseGet(() -> autoAuthorClassMapper.mapToAuthor(authorDto)))

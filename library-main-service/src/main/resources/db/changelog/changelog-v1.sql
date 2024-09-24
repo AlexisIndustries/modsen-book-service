@@ -29,7 +29,6 @@ CREATE TABLE books
     isbn        VARCHAR(255),
     title       VARCHAR(255),
     description VARCHAR(1000),
-    quantity    INTEGER,
     CONSTRAINT pk_books PRIMARY KEY (id)
 );
 

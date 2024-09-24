@@ -1,12 +1,11 @@
 package com.alexisindustries.library.reservation.controller;
 
-import com.alexisindustries.library.reservation.model.dto.BookDto;
+import com.alexisindustries.library.reservation.model.dto.BookReservationAddDto;
 import com.alexisindustries.library.reservation.model.dto.BookReservationDto;
 import com.alexisindustries.library.reservation.service.BookReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,16 +30,10 @@ public class BookReservationController {
         return ResponseEntity.ok(bookReservationService.findAll());
     }
 
-    @Operation(summary = "Get book reservation by ID", description = "Retrieve a book reservation by its ID")
-    @GetMapping("{id}")
-    public ResponseEntity<BookReservationDto> getBookReservationById(@PathVariable Long id) {
-        return ResponseEntity.ok(bookReservationService.findById(id));
-    }
-
     @Operation(summary = "Create a new book reservation", description = "Create a new book reservation")
     @PostMapping("")
-    public ResponseEntity<BookReservationDto> createBookReservation(@RequestBody BookReservationDto bookReservationDto) {
-        return ResponseEntity.ok(bookReservationService.save(bookReservationDto));
+    public ResponseEntity<BookReservationDto> createBookReservation(@RequestBody BookReservationAddDto bookReservationAddDto) {
+        return ResponseEntity.ok(bookReservationService.addBookInventory(bookReservationAddDto));
     }
 
     @Operation(summary = "Update a book reservation", description = "Update an existing book reservation by its ID")
@@ -49,22 +42,9 @@ public class BookReservationController {
         return ResponseEntity.ok(bookReservationService.update(id, bookReservationDetails));
     }
 
-    @Operation(summary = "Delete a book reservation", description = "Delete a book reservation by its ID")
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteBookReservation(@PathVariable Long id) {
-        bookReservationService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "Get available book reservations", description = "Retrieve a list of all available book reservations")
+    @Operation(summary = "Get available books", description = "Retrieve a list of all available books")
     @GetMapping("available")
-    public ResponseEntity<List<BookDto>> getAvailableBookReservations() {
+    public ResponseEntity<List<BookReservationDto>> getAvailableBooks() {
         return ResponseEntity.ok(bookReservationService.getAllAvailableBooks());
-    }
-
-    @Operation(summary = "Check if a book is available", description = "Check if a specific book is available for reservation by its ID")
-    @GetMapping("isavailable/{id}")
-    public ResponseEntity<Boolean> isBookAvailable(@PathVariable Long id) {
-        return ResponseEntity.ok(bookReservationService.isBookAvailable(id));
     }
 }

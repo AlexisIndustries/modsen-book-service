@@ -16,10 +16,8 @@ public class BookReservation {
     private Long id;
     @Column(nullable = false)
     private Long bookId;
-    @Column(nullable = false)
-    private Long userId;
-    @Column(nullable = false)
+    @Column
     private LocalDateTime borrowedTime;
-    @Column(nullable = false)
+    @Column
     private LocalDateTime returnTime;
 }

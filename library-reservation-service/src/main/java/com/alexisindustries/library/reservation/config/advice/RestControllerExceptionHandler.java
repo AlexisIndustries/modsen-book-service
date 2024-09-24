@@ -3,6 +3,7 @@ package com.alexisindustries.library.reservation.config.advice;
 import com.alexisindustries.library.reservation.exception.EntityAlreadyExistsException;
 import com.alexisindustries.library.reservation.exception.EntityNotFoundException;
 import com.alexisindustries.library.reservation.exception.ExceptionMessageResponse;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,7 +37,7 @@ public class RestControllerExceptionHandler {
                 .body(new ExceptionMessageResponse(e.getMessage(), "Entity not found"));
     }
 
-    @ExceptionHandler(EntityAlreadyExistsException.class)
+    @ExceptionHandler({EntityAlreadyExistsException.class, EntityExistsException.class})
     public ResponseEntity<Object> handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

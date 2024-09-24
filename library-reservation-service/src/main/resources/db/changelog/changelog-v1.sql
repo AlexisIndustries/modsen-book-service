@@ -8,9 +8,8 @@ CREATE TABLE books_reservations
 (
     id            BIGINT                      NOT NULL,
     book_id       BIGINT                      NOT NULL,
-    user_id       BIGINT                      NOT NULL,
-    borrowed_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    return_time   TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    borrowed_time TIMESTAMP WITHOUT TIME ZONE,
+    return_time   TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_books_reservations PRIMARY KEY (id)
 );
 
