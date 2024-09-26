@@ -21,14 +21,10 @@ import java.util.stream.Collectors;
 public class BookReservationServiceImpl implements BookReservationService {
     private final BookReservationRepository bookReservationRepository;
     private final AutoBookReservationClassMapper autoBookReservationClassMapper;
-    private final RestTemplate restTemplate;
-    private final String host;
 
-    public BookReservationServiceImpl(BookReservationRepository bookReservationRepository, AutoBookReservationClassMapper mapper, RestTemplate restTemplate, @Value("${spring.library.main.service.host}") String host) {
+    public BookReservationServiceImpl(BookReservationRepository bookReservationRepository, AutoBookReservationClassMapper mapper) {
         this.bookReservationRepository = bookReservationRepository;
         this.autoBookReservationClassMapper = mapper;
-        this.restTemplate = restTemplate;
-        this.host = host;
     }
 
     @Override
