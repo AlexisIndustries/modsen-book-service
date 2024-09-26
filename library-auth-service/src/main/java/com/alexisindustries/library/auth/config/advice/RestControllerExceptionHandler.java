@@ -38,7 +38,7 @@ public class RestControllerExceptionHandler {
     }
 
     @ExceptionHandler({EntityAlreadyExistsException.class, EntityExistsException.class})
-    public ResponseEntity<Object> handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
+    public ResponseEntity<Object> handleEntityAlreadyExistsException(RuntimeException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionMessageResponse(e.getMessage(), "Entity already exists"));
