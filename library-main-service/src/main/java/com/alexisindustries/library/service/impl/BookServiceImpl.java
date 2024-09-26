@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
     private final RestTemplate restTemplate;
     private final String host;
 
-    public BookServiceImpl(BookRepository bookRepository, BookGenreRepository bookGenreRepository, AuthorRepository authorRepository, AutoBookClassMapper autoBookClassMapper, AutoBookGenreClassMapper autoBookGenreClassMapper, AutoAuthorClassMapper autoAuthorClassMapper, RestTemplate restTemplate, @Value("${spring.library.main.service.host}") String host) {
+    public BookServiceImpl(BookRepository bookRepository, BookGenreRepository bookGenreRepository, AuthorRepository authorRepository, AutoBookClassMapper autoBookClassMapper, AutoBookGenreClassMapper autoBookGenreClassMapper, AutoAuthorClassMapper autoAuthorClassMapper, RestTemplate restTemplate, @Value("${spring.library.reservation.service.host}") String host) {
         this.bookRepository = bookRepository;
         this.bookGenreRepository = bookGenreRepository;
         this.authorRepository = authorRepository;
@@ -87,6 +87,21 @@ public class BookServiceImpl implements BookService {
         }
 
         Book bookToSave = autoBookClassMapper.mapToBook(bookDto);
+
+        List<Author> authors = bookDto.getAuthors().stream()
+                .map(authorDto -> authorRepository.findByName(authorDto.getName())
+                        .orElseGet(() -> autoAuthorClassMapper.mapToAuthor(authorDto)))
+                .collect(Collectors.toList());
+
+        bookToSave.setAuthors(authors);
+
+        List<BookGenre> genres = bookDto.getGenres().stream()
+                .map(genreDto -> bookGenreRepository.findByName(genreDto.getName())
+                        .orElseGet(() -> autoBookGenreClassMapper.mapToBookGenre(genreDto)))
+                .collect(Collectors.toList());
+
+        bookToSave.setGenres(genres);
+
         Book savedBook = bookRepository.save(bookToSave);
 
         BookReservationAddDto dto = BookReservationAddDto.builder()

@@ -39,7 +39,6 @@ services:
       context: library-config-server
       dockerfile: ./Dockerfile
     environment:
-      MAIN_HOSTNAME: library-main-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server
     ports:
       - "8888:8888"
@@ -96,7 +95,8 @@ services:
     environment:
       CONFIG_SERVER_HOSTNAME: library-config-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server
-      AUTH_SERVER_HOSTNAME: library-auth-service
+      RESERVATION_HOSTNAME: library-reservation-service
+      AUTH_SERVICE_HOSTNAME: library-auth-service
       DB_HOSTNAME: postgresql
     ports:
       - "8991:8991"
@@ -121,7 +121,7 @@ services:
     environment:
       CONFIG_SERVER_HOSTNAME: library-config-server
       DISCOVERY_SERVER_HOSTNAME: library-discovery-server
-      AUTH_SERVER_HOSTNAME: library-auth-service
+      AUTH_SERVICE_HOSTNAME: library-auth-service
       DB_HOSTNAME: postgresql
     ports:
       - "8501:8501"
